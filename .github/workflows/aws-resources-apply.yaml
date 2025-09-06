@@ -1,0 +1,23 @@
+name: aws-resources-apply
+on:
+  workflow_dispatch:
+    inputs:
+      apply_env:
+        description: 'Apply to create resources, default is false'
+        required: true
+        type: boolean
+        default: false
+
+
+permissions:
+  id-token: write
+  contents: read
+  actions: read
+
+jobs:
+  apply:
+    name: aws-resources
+    # Reuse the compile workflow (can even point to another repo, see the docs)
+    uses: ./.github/workflows/workspace-tf-plan.yaml
+    with:
+      apply_env: ${{ inputs.apply_env }}
