@@ -149,3 +149,9 @@ This repository contains Terraform code to create AWS Lambda functions with mult
 7. Once the PR is approved and merged , Go to the GitHub Actions tab , Here is where you will see a pipeline will start running to clean up all the hotfix branch resources.
 8. Once the above step is done , wonderful thing that you will see the the branch will automatically deleted too and changes will sync from main to develop to keep everything in sync
 
+aws dynamodb get-item --table-name eks-terraform --key '{"LockID": {"S": "aws-glue-terraform-state-kspr/env:/hotfix-kosana/lambda-tf-workspaces-cicd/workspaces/terraform.tfstate"}}'
+
+
+aws dynamodb delete-item \
+    --table-name eks-terraform \
+    --key '{"LockID": {"S": "aws-glue-terraform-state-kspr/env:/hotfix-kosana/lambda-tf-workspaces-cicd/workspaces/terraform.tfstate"}}'
