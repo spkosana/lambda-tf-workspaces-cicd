@@ -10,6 +10,7 @@ This repository contains Terraform code to create AWS Lambda functions with mult
 
 ## OpenID Connect
 - [openid-connect Docs](https://docs.github.com/en/actions/concepts/security/openid-connect)
+- [oidc-in-aws](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws)
 - Go to Aws Console
   - Click on IAM 
   - Click on Identiry providers
@@ -71,7 +72,7 @@ This repository contains Terraform code to create AWS Lambda functions with mult
 ## Pre-requistes: before running terraform
 - AWS Role - created using OIDC to interact from Github Workflow actions and with neccessary permissions
 - bucket = "aws-glue-terraform-state-kspr"
-- key= "lambda-tf-workspaces-cicd/terraform.tfstate"
+- key= "lambda-tf-workspaces-cicd/workspaces/terraform.tfstate"
 - dynamodb_table = "eks-terraform"
 
 
