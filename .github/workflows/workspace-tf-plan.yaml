@@ -102,6 +102,7 @@ jobs:
           TF_WORKSPACE_ENV: ${{ steps.set-terraform-workspace.outputs.workspace }}
           TF_VARS_FILE_ENV: ${{ steps.set-terraform-workspace.outputs.vars_file }}
         run: |
+          echo "Using $TF_VARS_FILE_ENV file for running terraform"
           terraform workspace select $TF_WORKSPACE_ENV || terraform workspace new $TF_WORKSPACE_ENV
           terraform plan -var-file="$TF_VARS_FILE_ENV" -out=tfplan
           
