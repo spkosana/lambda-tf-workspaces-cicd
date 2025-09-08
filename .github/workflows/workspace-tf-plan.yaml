@@ -63,14 +63,16 @@ jobs:
       - name: Set Terraform workspace
         id: set-terraform-workspace
         run: |
+          BRANCH="${{ github.head_ref || github.ref_name }}"
           BRANCH_NAME=$(echo "${{ github.head_ref || github.ref_name }}" | cut -d'-' -f2)
+          echo "Full Branch name is: $BRANCH"
           if [ "$BRANCH_NAME" = "main" ]; then
             echo "workspace=prod" >> $GITHUB_OUTPUT
             echo "vars_file=prod.tfvars" >> $GITHUB_OUTPUT
           elif [ "$BRANCH_NAME" = "develop" ]; then
             echo "workspace=dev" >> $GITHUB_OUTPUT
             echo "vars_file=dev.tfvars" >> $GITHUB_OUTPUT
-          elif [ "$BRANCH_NAME" = *"hotfix/"* ]; then
+          elif [[ "$BRANCH" == hotfix/* ]]; then
             echo "workspace=hotfix-$BRANCH_NAME" >> $GITHUB_OUTPUT
             echo "vars_file=prod.tfvars" >> $GITHUB_OUTPUT
           else
@@ -80,10 +82,10 @@ jobs:
       - name: Use output from above
         id: echo-workspace
         env:
-            BRANCH_NAME: ${{ steps.set-terraform-workspace.outputs.workspace }}
+            WORKSPACE_NAME: ${{ steps.set-terraform-workspace.outputs.workspace }}
         run: |
           echo "Output from above: ${{ steps.set-terraform-workspace.outputs.workspace }}"
-          echo "branch name from above: $BRANCH_NAME"
+          echo "workspace name from above: $WORKSPACE_NAME"
       - name: checking the environment variables
         id: reuse-values
         run: |
