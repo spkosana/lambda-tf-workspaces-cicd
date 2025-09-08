@@ -17,7 +17,7 @@ terraform {
 }
 
 locals {
-  repo_name = "$(basename -s .git `git config --get remote.origin.url`)"
+  repo_name = "$(git config --get remote.origin.url | cut -d'/' -f5 | cut -d'.' -f1)"
 }
 
 provider "aws" {
