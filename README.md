@@ -130,4 +130,7 @@ This repository contains Terraform code to create AWS Lambda functions with mult
     - Run the workflow again and observe the changes in your aws resources based on the changes in the code push
 4. Now the code changes are done , its time to create merge request to develop
 5. Create a pull request from feature/1111-kosana to develop branch
-6. Once the PR is approved and merged , Go to the GitHub Actions tab , Here is where you will a pipeline will start running to clean up all the individual contributor branch resources. 
+6. Below is for showing how feature-branch-destory worflow complets the cleanup of aws resources and branch
+7. Once the PR is approved and merged , Go to the GitHub Actions tab , Here is where you will see a pipeline will start running to clean up all the individual contributor branch resources.
+8. Once the above step is done , wonderful thing that you will see the the branch will automatically deleted too
+9. Now this is how we can handle the workflow to clean up after the aws resources and individual contributor branches and keep the repo clean
