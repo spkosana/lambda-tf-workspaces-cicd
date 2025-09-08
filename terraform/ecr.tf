@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "users" {
-  name                 = "${terraform.workspace}-generate-users"
+  name                 = "${terraform.workspace}-${var.app_name}"
   image_tag_mutability = "MUTABLE"
   force_delete         = true
   image_scanning_configuration {
