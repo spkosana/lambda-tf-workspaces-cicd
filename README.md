@@ -108,3 +108,4 @@ This repository contains Terraform code to create AWS Lambda functions with mult
     - Follow the same steps to run your workflow as you did in step 3. 
     - Now this will show creation of ECR repo in the workspace prod as the pipeline is running using main branch
     - Verify the tfplan step in the workflow to see if the appropriate resources creation is in the plan
+    - once you have verified that plan is being populated as expected , re run the action now by enabling the checkbox and once the plan is successfully complete you can see the aws resource will generate as shown in the plan from above step

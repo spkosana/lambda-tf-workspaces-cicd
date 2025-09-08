@@ -1,0 +1,25 @@
+name: feature-branch-destroy
+on:
+  pull_request:
+    types: [closed]
+    branches: [develop]
+
+permissions:
+  id-token: write
+  contents: write
+  actions: read
+
+jobs:
+  destroy:
+    name: common-destory-check
+    if: startsWith(github.event.pull_request.head.ref, 'feature/')
+    # Reuse the compile workflow (can even point to another repo, see the docs)
+    uses: ./.github/workflows/aws-resources-destroy.yaml
+    with:
+      destroy_env: true
+  branch_delete:
+    needs: destroy
+    if: ${{ github.event.pull_request.merged }}
+    uses: ./.github/workflows/branch-delete.yaml
+    with:
+      branch_name: ${{ github.event.pull_request.head.ref }}

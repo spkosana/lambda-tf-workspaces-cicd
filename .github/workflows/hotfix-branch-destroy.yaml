@@ -1,0 +1,49 @@
+name: hotfix-branch-destroy
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+
+
+permissions:
+  id-token: write
+  contents: write
+  actions: read
+
+jobs:
+  common:
+    name: common-destory-check
+    if: startsWith(github.event.pull_request.head.ref, 'hotfix/')
+    # Reuse the compile workflow (can even point to another repo, see the docs)
+    uses: ./.github/workflows/aws-resources-destroy.yaml
+    with:
+      destroy_env: true
+  branch_delete:
+    needs: common
+    if: ${{ github.event.pull_request.merged }}
+    uses: ./.github/workflows/branch-delete.yaml
+    with:
+      branch_name: ${{ github.event.pull_request.head.ref }}
+  sync_main_develop:
+    needs: branch_delete
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout repository
+        id: clone-repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Git User
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "spkosana.82@gmail.com"
+      - name: Update develop
+        id: sync-main-develop
+        run: |
+          git checkout main
+          git fetch origin
+          git checkout develop
+          git pull
+          git merge origin/main
+          git push origin develop

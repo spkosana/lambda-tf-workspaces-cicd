@@ -1,0 +1,35 @@
+name: branch-delete
+
+on:
+  workflow_call:
+    inputs:
+      branch_name:
+        description: "Get the branch name that should be deleted"
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  run_after_success:
+    name: branch-cleanup-job
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout repository
+        id: clone-repo
+        uses: actions/checkout@v3
+
+      - name: Deleting branch 
+        id: delete-branches
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BRANCH_NAME: ${{ inputs.branch_name }}
+          HEAD_REF_NAME: ${{ github.event.pull_request.head.ref }}
+        if: ${{ github.event.pull_request.head.ref != 'main' && github.event.pull_request.head.ref != 'develop' }}
+        run: |
+          # Example: Get a list of files matching a pattern
+          echo $BRANCH_NAME
+          echo $HEAD_REF_NAME
+          git push origin --delete $BRANCH_NAME
