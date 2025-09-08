@@ -93,9 +93,9 @@ jobs:
         id: workspace-initiate
         working-directory: terraform
         env:
-          TF_WORKSPACE: ${{ steps.set-terraform-workspace.outputs.workspace }}
+          TF_WORKSPACE_ENV: ${{ steps.set-terraform-workspace.outputs.workspace }}
         run: |
-          terraform workspace select $TF_WORKSPACE || terraform workspace new $TF_WORKSPACE
+          terraform workspace select $TF_WORKSPACE_ENV || terraform workspace new $TF_WORKSPACE_ENV
       - name: Terraform Plan
         id: plan
         working-directory: terraform
