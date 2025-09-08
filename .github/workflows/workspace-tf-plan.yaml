@@ -96,10 +96,7 @@ jobs:
           TF_WORKSPACE_ENV: ${{ steps.set-terraform-workspace.outputs.workspace }}
         run: |
           terraform workspace select $TF_WORKSPACE_ENV || terraform workspace new $TF_WORKSPACE_ENV
-      - name: Terraform Plan
-        id: plan
-        working-directory: terraform
-        run: terraform plan -out=tfplan
+          terraform plan -var-file="$TF_WORKSPACE_ENV.tfvars" -out=tfplan
       - name: Terraform Apply
         if: ${{ inputs.apply_env }}
         working-directory: terraform
