@@ -101,6 +101,9 @@ jobs:
           if [[ "$TF_WORKSPACE_ENV" =~ hotfix/ ]]; then
             echo "The branch is a hotfix. This will use prod tfvars file"
             terraform plan -var-file="prod.tfvars" -out=tfplan
+          elif [ "${{ github.head_ref || github.ref_name }}" = *"feature/"* ]; then
+            echo "This is a feature branch, This uses feature tfvars file"
+            terraform plan -var-file="feature.tfvars" -out=tfplan
           else
             echo "This is not a hotfix branch.This will use $TF_WORKSPACE_ENV tfvars file"
             terraform plan -var-file="$TF_WORKSPACE_ENV.tfvars" -out=tfplan
