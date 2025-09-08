@@ -134,3 +134,16 @@ This repository contains Terraform code to create AWS Lambda functions with mult
 7. Once the PR is approved and merged , Go to the GitHub Actions tab , Here is where you will see a pipeline will start running to clean up all the individual contributor branch resources.
 8. Once the above step is done , wonderful thing that you will see the the branch will automatically deleted too
 9. Now this is how we can handle the workflow to clean up after the aws resources and individual contributor branches and keep the repo clean
+
+### hotfix lifecycle - Make sure you create branch starts with "hotfix/"
+1. Create a branch called hotfix/0000-prakash from main
+2. Push the code to repo
+3. Go to the GitHub Actions tab - Testing aws-resources-apply workflow for kos
+ana/or any individual contributor branch
+    - Follow the same steps to run your workflow as you did before. 
+    - Now this will show creation of ECR repo in the workspace prakash as the pipeline is running using hotfix/0000-prakash branch
+    - Follow the steps above to verify resources has been created in the aws environment
+    - Now for testing change some values in the tags just for fun and add the code changes and push the code
+    - Run the workflow again and observe the changes in your aws resources based on the changes in the code push
+4. Now the code changes are done as part of hotfix , its time to create a pull request to main
+
