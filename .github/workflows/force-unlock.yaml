@@ -1,6 +1,11 @@
 name: terraform-force-unlock
 on:
   workflow_dispatch:
+    inputs:
+      lock_id:
+        description: "Give Lock id to force unlock"
+        required: false
+        type: string
 
 
 permissions:
@@ -40,6 +45,10 @@ jobs:
           repository: ${{ github.repository }}
       - name: Terraform Destroy
         working-directory: terraform
+        env:
+            LOCK_ID: ${{ inputs.lock_id }}
         run: |
           terraform init
           terraform state list
+          echo $LOCK_ID
+        #   terraform force-unlock <LOCK_ID>
