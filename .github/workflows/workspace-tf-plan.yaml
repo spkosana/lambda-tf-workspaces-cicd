@@ -109,7 +109,7 @@ jobs:
       - name: Terraform Apply
         if: ${{ inputs.apply_env }}
         working-directory: terraform
-        run: terraform apply tfplan --auto-approve
+        run: terraform apply --auto-approve tfplan
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v4
         id: upload
