@@ -80,10 +80,16 @@ jobs:
           repository: ${{ github.repository }}
       - name: Terraform Destroy
         working-directory: terraform
+        env:
+          TF_WORKSPACE_ENV: ${{ needs.common.outputs.tf_workspace }}
+          VARS_FILE: ${{ needs.common.outputs.vars_file }}
         run: |
+          echo "Using the workspace: $TF_WORKSPACE_ENV"
+          echo "Using the vars file: $VARS_FILE"
+          echo "Using the vars file: ${{ needs.common.outputs.vars_file }}"
           terraform init
           terraform workspace select ${{ needs.common.outputs.tf_workspace }}
-          terraform destroy --auto-approve
+          terraform destroy -auto-approve -var-file="$VARS_FILE" -lock=false
           terraform workspace select default
           terraform workspace delete ${{ needs.common.outputs.tf_workspace }}
           terraform workspace list
