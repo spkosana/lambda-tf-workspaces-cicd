@@ -68,6 +68,8 @@ jobs:
             echo "workspace=prod" >> $GITHUB_OUTPUT
           elif [ "$BRANCH_NAME" = "develop" ]; then
             echo "workspace=dev" >> $GITHUB_OUTPUT
+          elif [ "$BRANCH_NAME" = *"hotfix/"* ]; then
+            echo "workspace=hotfix-$BRANCH_NAME" >> $GITHUB_OUTPUT
           else
             echo "workspace=$BRANCH_NAME" >> $GITHUB_OUTPUT
           fi
@@ -96,7 +98,14 @@ jobs:
           TF_WORKSPACE_ENV: ${{ steps.set-terraform-workspace.outputs.workspace }}
         run: |
           terraform workspace select $TF_WORKSPACE_ENV || terraform workspace new $TF_WORKSPACE_ENV
-          terraform plan -var-file="$TF_WORKSPACE_ENV.tfvars" -out=tfplan
+          if [[ "$TF_WORKSPACE_ENV" =~ hotfix/ ]]; then
+            echo "The branch is a hotfix. This will use prod tfvars file"
+            terraform plan -var-file="prod.tfvars" -out=tfplan
+          else
+            echo "This is not a hotfix branch.This will use $TF_WORKSPACE_ENV tfvars file"
+            terraform plan -var-file="$TF_WORKSPACE_ENV.tfvars" -out=tfplan
+          fi
+          
       - name: Terraform Apply
         if: ${{ inputs.apply_env }}
         working-directory: terraform
