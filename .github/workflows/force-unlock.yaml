@@ -55,6 +55,6 @@ jobs:
             DYNAMODB_TABLE: ${{ inputs.dynamodb_table }}
             WORKSPACE: ${{ inputs.workspace }}
         run: |
-          LOCK_ID: "$BUCKET_NAME/env:/$WORKSPACE/$PREFIX_KEY"
+          LOCK_ID="$BUCKET_NAME/env:/$WORKSPACE/$PREFIX_KEY"
           echo "Lock id: $LOCK_ID"
           aws s3 ls
