@@ -27,7 +27,7 @@ data "external" "repo_name" {
   ]
 }
 locals {
-  repo_name = data.external.repo_name.result.stdout
+  repo_name = data.external.repo_name.result.repo_name
 }
 
 provider "aws" {
