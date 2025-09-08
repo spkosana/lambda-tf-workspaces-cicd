@@ -7,6 +7,13 @@ on:
         description: "Get the branch name that should be deleted"
         required: true
         type: string
+  workflow_dispatch:
+    inputs:
+      branch_name:
+        description: "Get the branch name that should be deleted"
+        required: true
+        type: string
+
 
 permissions:
   id-token: write
