@@ -40,6 +40,7 @@ jobs:
       tf_workspace_output: ${{ steps.set-terraform-workspace.outputs.workspace }}
       artifact_name: ${{ steps.upload.outputs.artifact-id }}
       environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
+      vars_file: ${{ steps.set-terraform-workspace.outputs.vars_file }}
 
     steps:
       - name: Check the given inputs
