@@ -8,6 +8,10 @@ on:
         required: true
         type: boolean
         default: false
+      lock_flag:
+        description: 'Remove lock'
+        type: boolean
+        default: true
   workflow_dispatch:
     inputs:
       destroy_env:
@@ -15,7 +19,10 @@ on:
         required: true
         type: boolean
         default: false
-
+      lock_flag:
+        description: 'Remove lock'
+        type: boolean
+        default: true
 permissions:
   id-token: write
   contents: read
@@ -80,10 +87,17 @@ jobs:
           repository: ${{ github.repository }}
       - name: Terraform Destroy
         working-directory: terraform
+        env:
+          TF_WORKSPACE_ENV: ${{ needs.common.outputs.tf_workspace }}
+          VARS_FILE: ${{ needs.common.outputs.vars_file }}
+          LOCK_FLAG: ${{ inputs.lock_flag }}
         run: |
+          echo "Using the workspace: $TF_WORKSPACE_ENV"
+          echo "Using the vars file: $VARS_FILE"
+          echo "Using the vars file: ${{ needs.common.outputs.vars_file }}"
           terraform init
           terraform workspace select ${{ needs.common.outputs.tf_workspace }}
-          terraform destroy --auto-approve
+          terraform destroy -auto-approve -lock=$LOCK_FLAG -var-file="$VARS_FILE"
           terraform workspace select default
-          terraform workspace delete ${{ needs.common.outputs.tf_workspace }}
+          terraform workspace delete ${{ needs.common.outputs.tf_workspace }} 
           terraform workspace list
