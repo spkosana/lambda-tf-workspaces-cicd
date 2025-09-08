@@ -24,6 +24,9 @@ on:
       environment:
         description: 'Environment for the terraform plan'
         value: ${{ jobs.setup.outputs.environment }}
+      vars_file:
+        description: 'TF Vars file based on the reference branch'
+        value: ${{ jobs.setup.outputs.vars_file }}
 
 # OIDC permissions for keyless authentication
 permissions:
