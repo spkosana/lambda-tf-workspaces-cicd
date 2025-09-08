@@ -86,8 +86,8 @@ This repository contains Terraform code to create AWS Lambda functions with mult
     - Make sure to update the role name in the GitHub Environments
     - Make sure to update the region value in the GitHub Environments
 2. For the initial process only keep backend.tf and variables.tf with the values that are relavant to your aws environment and push the code to repo
-3. Go to the GitHub Actions tab
-    - Right side top corner there is an option Run workflow , make sure you check the branch as main or relavant branch before running the pipeline
+3. Go to the GitHub Actions tab - Testing aws-resources-apply workflow for main branch
+    - Right side top corner there is an option Run workflow (aws-resources-apply) , make sure you check the branch as main or relavant branch before running the pipeline
       - Click on Run workflow button - There is a check box that is available where the default value will be false
         - false (default): This will run the terraform init and apply plan and will initiate the process and registers terratform.tfstate file in s3 location
         - true: select the check box and it will pass value true and it will init the terraform plan and applies the plan , Please refere the plan and verify the resources in aws account
@@ -113,7 +113,7 @@ This repository contains Terraform code to create AWS Lambda functions with mult
 ### Develop Lifecycle 
 1. Create a branch called develop from main
 2. Push the code to repo
-3. Go to the GitHub Actions tab
+3. Go to the GitHub Actions tab - Testing aws-resources-apply workflow for develop branch
     - Follow the same steps to run your workflow as you did in step 3. 
     - Now this will show creation of ECR repo in the workspace dev as the pipeline is running using develop branch
     - Verify the tfplan step in the workflow to see if the appropriate resources creation is in the plan
@@ -122,7 +122,9 @@ This repository contains Terraform code to create AWS Lambda functions with mult
 ### Individual contributor lifecycle - developer SDLC - Make sure you create branch starts with "feature/"
 1. Create a branch called feature/1111-kosana from develop
 2. Push the code to repo
-3. Go to the GitHub Actions tab
+3. Go to the GitHub Actions tab - Testing aws-resources-apply workflow for kosana/or any individual contributor branch
     - Follow the same steps to run your workflow as you did in step 3. 
     - Now this will show creation of ECR repo in the workspace kosana as the pipeline is running using feature/1111-kosana branch
-    - Follow the steps above to verify resources has been created in the aws environment 
+    - Follow the steps above to verify resources has been created in the aws environment
+    - Now for testing change some values in the tags just for fun and add the code changes and push the code
+    - Run the workflow again and observe the changes in your aws resources based on the changes
