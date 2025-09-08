@@ -1,14 +1,14 @@
 # lambda-tf-workspaces-cicd
 This repository contains Terraform code to create AWS Lambda functions with multiple workspaces and CI/CD pipeline using GitHub Actions.
 
-## Project has three segments
+# Project has three segments
 - OIDC connect For AWS role
 - GitHub Environments
 - Terraform 
   - Used workspaces feature as demo
   - [docs](https://developer.hashicorp.com/terraform/cloud-docs/workspaces#creating-workspaces)
 
-## OpenID Connect
+# OpenID Connect
 - [openid-connect Docs](https://docs.github.com/en/actions/concepts/security/openid-connect)
 - [oidc-in-aws](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws)
 - Go to Aws Console
@@ -54,7 +54,7 @@ This repository contains Terraform code to create AWS Lambda functions with mult
         }
     ```
 
-## Github Environments
+# Github Environments
 - Go to the Project Settings
 - Click on Environments
 - Click on New environment
@@ -69,16 +69,14 @@ This repository contains Terraform code to create AWS Lambda functions with mult
       - Add name AWS_REGION and add the region value 
 
 
-## Pre-requistes: before running terraform
+# Pre-requistes: before running terraform
 - AWS Role - created using OIDC to interact from Github Workflow actions and with neccessary permissions
 - bucket = "aws-glue-terraform-state-kspr"
 - key= "lambda-tf-workspaces-cicd/workspaces/terraform.tfstate"
 - dynamodb_table = "eks-terraform"
 
 
-# Ready for some action? 
-
-## Steps to follow along
+# Ready for some action?  Steps to follow along
 1. Clone the repository
     ### Note
     - Make sure to update the bucket name, key and dynamodb_table in the backend.tf file
@@ -111,7 +109,7 @@ This repository contains Terraform code to create AWS Lambda functions with mult
     - Verify the tfplan step in the workflow to see if the appropriate resources creation is in the plan
     - once you have verified that plan is being populated as expected , re run the action now by enabling the checkbox and once the plan is successfully complete you can see the aws resource will generate as shown in the plan from above step
 
-### Develop Lifecycle 
+# Develop Lifecycle 
 1. Create a branch called develop from main
 2. Push the code to repo
 3. Go to the GitHub Actions tab - Testing aws-resources-apply workflow for develop branch
@@ -120,7 +118,7 @@ This repository contains Terraform code to create AWS Lambda functions with mult
     - Verify the tfplan step in the workflow to see if the appropriate resources creation is in the plan
     - once you have verified that plan is being populated as expected , re run the action now by enabling the checkbox and once the plan is successfully complete you can see the aws resource will generate as shown in the plan from above step
 
-### Individual contributor lifecycle - developer SDLC - Make sure you create branch starts with "feature/"
+# Individual contributor lifecycle - developer SDLC - Make sure you create branch starts with "feature/"
 1. Create a branch called feature/1111-kosana from develop
 2. Push the code to repo
 3. Go to the GitHub Actions tab - Testing aws-resources-apply workflow for kosana/or any individual contributor branch
@@ -136,7 +134,7 @@ This repository contains Terraform code to create AWS Lambda functions with mult
 8. Once the above step is done , wonderful thing that you will see the the branch will automatically deleted too
 9. Now this is how we can handle the workflow to clean up after the aws resources and individual contributor branches and keep the repo clean
 
-### hotfix lifecycle - Make sure you create branch starts with "hotfix/"
+# hotfix lifecycle - Make sure you create branch starts with "hotfix/"
 1. Create a branch called hotfix/0000-prakash from main
 2. Push the code to repo
 3. Go to the GitHub Actions tab - Testing aws-resources-apply workflow for hotfix/0000-prakash
