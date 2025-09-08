@@ -65,6 +65,7 @@ jobs:
         run: |
           BRANCH="${{ github.head_ref || github.ref_name }}"
           BRANCH_NAME=$(echo "${{ github.head_ref || github.ref_name }}" | cut -d'-' -f2)
+          echo "Full Branch name is: $BRANCH"
           if [ "$BRANCH_NAME" = "main" ]; then
             echo "workspace=prod" >> $GITHUB_OUTPUT
             echo "vars_file=prod.tfvars" >> $GITHUB_OUTPUT
