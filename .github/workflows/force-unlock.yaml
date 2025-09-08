@@ -2,10 +2,32 @@ name: terraform-force-unlock
 on:
   workflow_dispatch:
     inputs:
+      workspace:
+        description: "Give Lock id to force unlock"
+        required: false
+        type: string
+        default: "hotfix-kosana"
+
       lock_id:
         description: "Give Lock id to force unlock"
         required: false
         type: string
+      bucket_name:
+        description: "Get the branch name that should be deleted"
+        required: false
+        type: string
+        default: "aws-glue-terraform-state-kspr"
+      prefix_key:
+        description: "Get the branch name that should be deleted"
+        required: false
+        type: string
+        default: "lambda-tf-workspaces-cicd/workspaces/terraform.tfstate"
+      dynamodb_table:
+        description: "Get the branch name that should be deleted"
+        required: false
+        type: string
+        default: "eks-terraform"
+
 
 
 permissions:
@@ -47,8 +69,12 @@ jobs:
         working-directory: terraform
         env:
             LOCK_ID: ${{ inputs.lock_id }}
+            BUCKET_NAME: ${{ inputs.bucket_name }}
+            PREFIX_KEY: ${{ inputs.prefix_key }}
+            DYNAMODB_TABLE: ${{ inputs.dynamodb_table }}
+            WORKSPACE: ${{ inputs.workspace }}
         run: |
+          # aws-glue-terraform-state-kspr/env:/hotfix-kosana/lambda-tf-workspaces-cicd/workspaces/terraform.tfstate
           terraform init
-          terraform state list
           echo $LOCK_ID
-        #   terraform force-unlock <LOCK_ID>
+          echo "$BUCKET_NAME/env:/$WORKSPACE/$PREFIX_KEY"
