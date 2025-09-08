@@ -16,6 +16,10 @@ terraform {
   }
 }
 
+locals {
+  repo_name = "basename -s .git `git config --get remote.origin.url`"
+}
+
 provider "aws" {
   region = var.region
   default_tags {
@@ -23,6 +27,7 @@ provider "aws" {
       Environment = "${terraform.workspace}"
       Project     = "LAMBDA-TF-WORKSPACES-CICD"
       Owner       = "Surya Kosana"
+      Repository  = local.repo_name
     }
   }
 }
