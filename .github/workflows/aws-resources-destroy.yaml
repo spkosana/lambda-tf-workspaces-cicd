@@ -8,6 +8,10 @@ on:
         required: true
         type: boolean
         default: false
+      lock_flag:
+        description: 'Remove lock'
+        type: boolean
+        default: true
   workflow_dispatch:
     inputs:
       destroy_env:
