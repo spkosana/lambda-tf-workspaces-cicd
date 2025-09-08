@@ -16,7 +16,6 @@ terraform {
   }
 }
 
-
 data "external" "repo_name" {
   program = [
     "bash",
