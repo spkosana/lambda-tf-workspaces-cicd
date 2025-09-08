@@ -91,5 +91,5 @@ jobs:
           terraform workspace select ${{ needs.common.outputs.tf_workspace }}
           terraform destroy -auto-approve -lock=false -var-file="$VARS_FILE"
           terraform workspace select default
-          terraform workspace delete ${{ needs.common.outputs.tf_workspace }}
+          terraform workspace delete ${{ needs.common.outputs.tf_workspace }} -lock=false
           terraform workspace list
