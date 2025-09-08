@@ -72,7 +72,7 @@ jobs:
           elif [ "$BRANCH_NAME" = "develop" ]; then
             echo "workspace=dev" >> $GITHUB_OUTPUT
             echo "vars_file=dev.tfvars" >> $GITHUB_OUTPUT
-          elif [ "$BRANCH" == hotfix/* ]; then
+          elif [ "$BRANCH" =~ hotfix/* ]; then
             echo "workspace=hotfix-$BRANCH_NAME" >> $GITHUB_OUTPUT
             echo "vars_file=prod.tfvars" >> $GITHUB_OUTPUT
           else
