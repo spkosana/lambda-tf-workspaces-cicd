@@ -17,9 +17,15 @@ terraform {
 }
 
 data "external" "repo_name" {
-  program = ["bash", "-c", "git config --get remote.origin.url | cut -d'/' -f5 | cut -d'.' -f1"]
+  program = [
+    "bash",
+    "-c",
+    <<-EOT
+      REPO_NAME=$(git config --get remote.origin.url | cut -d'/' -f5 | cut -d'.' -f1)
+      printf '{"repo_name": "%s"}' "$REPO_NAME"
+    EOT
+  ]
 }
-
 locals {
   repo_name = data.external.repo_name.result.stdout
 }
