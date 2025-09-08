@@ -98,7 +98,7 @@ jobs:
           TF_WORKSPACE_ENV: ${{ steps.set-terraform-workspace.outputs.workspace }}
         run: |
           terraform workspace select $TF_WORKSPACE_ENV || terraform workspace new $TF_WORKSPACE_ENV
-          if [[ "$TF_WORKSPACE_ENV" =~ hotfix/ ]]; then
+          if [[ "${{ github.head_ref || github.ref_name }}" =~ hotfix ]]; then
             echo "The branch is a hotfix. This will use prod tfvars file"
             terraform plan -var-file="prod.tfvars" -out=tfplan
           elif [ "${{ github.head_ref || github.ref_name }}" = *"feature/"* ]; then
