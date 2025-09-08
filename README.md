@@ -118,3 +118,11 @@ This repository contains Terraform code to create AWS Lambda functions with mult
     - Now this will show creation of ECR repo in the workspace dev as the pipeline is running using develop branch
     - Verify the tfplan step in the workflow to see if the appropriate resources creation is in the plan
     - once you have verified that plan is being populated as expected , re run the action now by enabling the checkbox and once the plan is successfully complete you can see the aws resource will generate as shown in the plan from above step
+
+### Individual contributor lifecycle - developer SDLC - Make sure you create branch starts with "feature/"
+1. Create a branch called feature/1111-kosana from develop
+2. Push the code to repo
+3. Go to the GitHub Actions tab
+    - Follow the same steps to run your workflow as you did in step 3. 
+    - Now this will show creation of ECR repo in the workspace kosana as the pipeline is running using feature/1111-kosana branch
+    - Follow the steps above to verify resources has been created in the aws environment 
