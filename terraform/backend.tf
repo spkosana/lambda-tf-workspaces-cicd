@@ -16,8 +16,12 @@ terraform {
   }
 }
 
+data "external" "repo_name" {
+  program = ["bash", "-c", "git config --get remote.origin.url | cut -d'/' -f5 | cut -d'.' -f1"]
+}
+
 locals {
-  repo_name = "$(git config --get remote.origin.url | cut -d'/' -f5 | cut -d'.' -f1)"
+  repo_name = data.external.repo_name.result.stdout
 }
 
 provider "aws" {
