@@ -14,9 +14,6 @@ jobs:
     runs-on: ubuntu-24.04-arm
     environment: "${{ github.ref_name == 'main' && 'production' || 'development' }}"
     steps:
-      - name: Check the given inputs
-        run: |
-          echo "Input Value for apply_env: ${{ inputs.apply_env }}"
       - name: Checkout repository
         id: clone-repo
         uses: actions/checkout@v3
