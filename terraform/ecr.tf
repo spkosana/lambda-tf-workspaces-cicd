@@ -8,6 +8,7 @@ resource "aws_ecr_repository" "users" {
 
   tags = {
     Name = "${terraform.workspace}-generate-users"
+    Env  = terraform.workspace
   }
 
 }
