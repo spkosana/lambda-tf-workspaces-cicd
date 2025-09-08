@@ -1,4 +1,4 @@
-name: aws-resources-apply
+name: terraform-force-unlock
 on:
   workflow_dispatch:
 
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   unlock:
-    name: environment-check
+    name: unlock-check
     runs-on: ubuntu-24.04-arm
     environment: "${{ github.ref_name == 'main' && 'production' || 'development' }}"
     steps:
