@@ -1,0 +1,24 @@
+networks:
+  lambda-local:
+    driver: bridge
+
+services:
+  lambda-local:
+    build:
+      context: src
+      dockerfile: Dockerfile
+      args:
+        - LAMBDA_TASK_ROOT=${LAMBDA_TASK_ROOT:-/function}
+    image: spkosana/lambda-custom:1.0
+    platform: linux/arm64
+    container_name: lambda-local
+    restart: unless-stopped
+    environment:
+      LAMBDA_TASK_ROOT: ${LAMBDA_TASK_ROOT}
+    volumes:
+      - ./src/handler/:${LAMBDA_TASK_ROOT:-/function}/:rw
+      - ~/.aws:/root/.aws:ro
+    ports:
+      - "${LAMBDA_PORT:-3000}:8080"
+    networks:
+      - lambda-local
