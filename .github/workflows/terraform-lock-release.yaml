@@ -7,23 +7,6 @@ on:
         required: false
         type: string
         default: "mistake"
-      bucket_name:
-        description: "Bucket name where s3 backend is"
-        required: false
-        type: string
-        default: "aws-glue-terraform-state-kspr"
-      prefix_key:
-        description: "prefix key where the terraform.tfstate is saved "
-        required: false
-        type: string
-        default: "lambda-tf-workspaces-cicd/workspaces/terraform.tfstate"
-      dynamodb_table:
-        description: "Dynamodb Table name "
-        required: false
-        type: string
-        default: "eks-terraform"
-
-
 
 permissions:
   id-token: write
@@ -49,6 +32,6 @@ jobs:
       - name: LockId release
         working-directory: terraform
         run: |
-          LOCK_ID="${{ inputs.bucket_name }}/env:/${{ inputs.workspace }}/${{ inputs.prefix_key }}"
+          LOCK_ID="${{ vars.backend_bucket }}/env:/${{ inputs.workspace }}/${{ vars.backend_bucket_key }}"
           echo "Lock id: $LOCK_ID"
-          aws dynamodb delete-item --table-name ${{ inputs.dynamodb_table }} --key "{\"LockID\": {\"S\": \"$LOCK_ID\"}}" --return-values ALL_OLD
+          # aws dynamodb delete-item --table-name ${{ vars.dynamodb_table }} --key "{\"LockID\": {\"S\": \"$LOCK_ID\"}}" --return-values ALL_OLD
