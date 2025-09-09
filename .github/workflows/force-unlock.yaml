@@ -57,4 +57,4 @@ jobs:
         run: |
           LOCK_ID="$BUCKET_NAME/env:/$WORKSPACE/$PREFIX_KEY"
           echo "Lock id: $LOCK_ID"
-          echo aws dynamodb delete-item --table-name ''"$DYNAMODB_TABLE"'' --key '{"LockID": {"S": ''"$LOCK_ID"''}}' --return-values NONE
+          echo aws dynamodb delete-item --table-name '$DYNAMODB_TABLE' --key "{'LockID': {'S': '$LOCK_ID'}}"
