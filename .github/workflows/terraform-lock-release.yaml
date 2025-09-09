@@ -1,4 +1,4 @@
-name: terraform-force-unlock
+name: terraform-lock-release
 on:
   workflow_dispatch:
     inputs:
@@ -46,15 +46,9 @@ jobs:
           role-to-assume: ${{ vars.aws_iam_role }}
           role-session-name: GitHub-Role-${{ github.run_id }}
           aws-region: ${{ vars.aws_region }}
-      - name: Terraform Destroy
+      - name: LockId release
         working-directory: terraform
-        env:
-            
-            BUCKET_NAME: ${{ inputs.bucket_name }}
-            PREFIX_KEY: ${{ inputs.prefix_key }}
-            DYNAMODB_TABLE: ${{ inputs.dynamodb_table }}
-            WORKSPACE: ${{ inputs.workspace }}
         run: |
-          LOCK_ID="$BUCKET_NAME/env:/$WORKSPACE/$PREFIX_KEY"
+          LOCK_ID="${{ inputs.bucket_name }}/env:/${{ inputs.workspace }}/${{ inputs.prefix_key }}"
           echo "Lock id: $LOCK_ID"
-          aws dynamodb delete-item --table-name $DYNAMODB_TABLE --key "{\"LockID\": {\"S\": \"$LOCK_ID\"}}" --return-values ALL_OLD
+          aws dynamodb delete-item --table-name ${{ inputs.dynamodb_table }} --key "{\"LockID\": {\"S\": \"$LOCK_ID\"}}" --return-values ALL_OLD
