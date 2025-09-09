@@ -3,22 +3,22 @@ on:
   workflow_dispatch:
     inputs:
       workspace:
-        description: "Give Lock id to force unlock"
+        description: "Workspace of terraform changes"
         required: false
         type: string
         default: "hotfix-kosana"
       bucket_name:
-        description: "Get the branch name that should be deleted"
+        description: "Bucket name where s3 backend is"
         required: false
         type: string
         default: "aws-glue-terraform-state-kspr"
       prefix_key:
-        description: "Get the branch name that should be deleted"
+        description: "prefix key where the terraform.tfstate is saved "
         required: false
         type: string
         default: "lambda-tf-workspaces-cicd/workspaces/terraform.tfstate"
       dynamodb_table:
-        description: "Get the branch name that should be deleted"
+        description: "Dynamodb Table name "
         required: false
         type: string
         default: "eks-terraform"
@@ -57,4 +57,4 @@ jobs:
         run: |
           LOCK_ID="$BUCKET_NAME/env:/$WORKSPACE/$PREFIX_KEY"
           echo "Lock id: $LOCK_ID"
-          aws dynamodb delete-item --table-name '"$DYNAMODB_TABLE"'' --key '{"LockID": {"S": "$LOCK_ID"}}' --region ${{ vars.aws_region }}
+          aws dynamodb delete-item --table-name ''"${DYNAMODB_TABLE}"'' --key '{"LockID": {"S": "$LOCK_ID"}}' --region ${{ vars.aws_region }}
