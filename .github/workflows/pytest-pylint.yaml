@@ -1,0 +1,41 @@
+name: pytest
+
+on:
+  workflow_call:
+jobs:
+  test:
+    name: pytest-check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11"]
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./src
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pylint
+          export PYTHONPATH=$(pwd)
+
+      - name: Run pylint
+        run: |
+          pylint $(git ls-files '*.py')
+
+      - name: Run tests
+        run: pytest -vvv -s tests/test_*.py 
+      - name: Run tests with coverage and fail if below 100%
+        run: |
+          pytest --cov=. --cov-fail-under=100 tests/test_*.py

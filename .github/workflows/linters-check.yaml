@@ -1,6 +1,5 @@
 name: linters-check
 on:
-  workflow_dispatch:
   pull_request:
     branches:
       - main
@@ -11,3 +10,6 @@ jobs:
     name: tflint-check-call
     # Reuse the compile workflow (can even point to another repo, see the docs)
     uses: ./.github/workflows/tflint-check.yaml
+  pytest:
+    name: pytest-pylint-call
+    uses: ./.github/workflows/pytest-pylint.yaml

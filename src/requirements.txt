@@ -1,0 +1,8 @@
+requests
+boto3
+faker
+numpy==2.2.6
+awswrangler
+moto
+pytest
+pytest-cov
