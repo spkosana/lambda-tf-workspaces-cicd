@@ -6,7 +6,7 @@ on:
         description: "Workspace of terraform changes"
         required: false
         type: string
-        default: "hotfix-kosana"
+        default: "mistake"
       bucket_name:
         description: "Bucket name where s3 backend is"
         required: false
@@ -57,4 +57,4 @@ jobs:
         run: |
           LOCK_ID="$BUCKET_NAME/env:/$WORKSPACE/$PREFIX_KEY"
           echo "Lock id: $LOCK_ID"
-          aws dynamodb delete-item --table-name "'$DYNAMODB_TABLE'" --key \'{\"LockID\": {\"S\": \""$LOCK_ID"\"}}\'
+          echo aws dynamodb delete-item --table-name "'$DYNAMODB_TABLE'" --key \'{\"LockID\": {\"S\": \""$LOCK_ID"\"}}\'
