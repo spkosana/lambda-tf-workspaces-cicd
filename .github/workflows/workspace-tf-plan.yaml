@@ -83,17 +83,6 @@ jobs:
             echo "workspace=$BRANCH_NAME" >> $GITHUB_OUTPUT
             echo "vars_file=feature.tfvars" >> $GITHUB_OUTPUT
           fi
-      - name: Use output from above
-        id: echo-workspace
-        env:
-            WORKSPACE_NAME: ${{ steps.set-terraform-workspace.outputs.workspace }}
-        run: |
-          echo "Output from above: ${{ steps.set-terraform-workspace.outputs.workspace }}"
-          echo "workspace name from above: $WORKSPACE_NAME"
-      - name: checking the environment variables
-        id: reuse-values
-        run: |
-          echo  $BRANCH_NAME
       - name: Terraform Format
         id: fmt-init-validate
         working-directory: terraform

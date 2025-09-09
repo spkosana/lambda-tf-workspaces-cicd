@@ -82,7 +82,19 @@ Before running Terraform, update these values:
 ## Initial Setup
 1. **Clone the repository**
 2. **Configure backend**: Keep only `backend.tf` and `variables.tf` with your AWS environment values
-3. **Run initial workflow**:
+3. **List of all worflows**
+    - workspace-tf-plan.yaml , This is a worflow_call type of event ( can be call from another worflow )
+      - checks out respository
+      - installs aws credentails to connect with AWS 
+      - Installs Terraform 
+      - Decides what workspace and which tfvars file should be used based on the branch
+      - Initiates terraform and runs validate 
+      - creates workspace and runs plans with the tfvars file based on the values from above step
+      - Applies the terraform plan if the apply_env value is given as true else it will show the plan
+      - Uploads the artifacts in the repository 
+    - aws-resources-apply, This is workflow_dispatch type of event ( Manual run of the workflow )
+      - This calls workspace-tf-plan with default value for apply_env as false , this pr
+4. **Run initial workflow**:
   - Go to GitHub Actions → "aws-resources-apply" workflow
   - Select main branch → Click "Run workflow"
   - **Checkbox options**:
