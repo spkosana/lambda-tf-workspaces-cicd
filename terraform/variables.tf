@@ -7,5 +7,5 @@ variable "region" {
 variable "app_name" {
   description = "generate users lambda"
   type        = string
-  
+
 }
