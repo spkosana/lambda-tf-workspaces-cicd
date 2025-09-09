@@ -55,7 +55,6 @@ jobs:
             DYNAMODB_TABLE: ${{ inputs.dynamodb_table }}
             WORKSPACE: ${{ inputs.workspace }}
         run: |
-          #   aws dynamodb delete-item --table-name 'eks-terraform' --key '{"LockID": {"S": "aws-glue-terraform-state-kspr/env:/hotfix-kosana/lambda-tf-workspaces-cicd/workspaces/terraform.tfstate"}}'
           LOCK_ID="$BUCKET_NAME/env:/$WORKSPACE/$PREFIX_KEY"
           echo "Lock id: $LOCK_ID"
           aws dynamodb delete-item --table-name "'$DYNAMODB_TABLE'" --key \'{\"LockID\": {\"S\": \""$LOCK_ID"\"}}\'
