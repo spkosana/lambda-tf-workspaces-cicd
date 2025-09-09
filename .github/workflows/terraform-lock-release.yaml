@@ -1,0 +1,54 @@
+name: terraform-lock-release
+on:
+  workflow_dispatch:
+    inputs:
+      workspace:
+        description: "Workspace of terraform changes"
+        required: false
+        type: string
+        default: "mistake"
+      bucket_name:
+        description: "Bucket name where s3 backend is"
+        required: false
+        type: string
+        default: "aws-glue-terraform-state-kspr"
+      prefix_key:
+        description: "prefix key where the terraform.tfstate is saved "
+        required: false
+        type: string
+        default: "lambda-tf-workspaces-cicd/workspaces/terraform.tfstate"
+      dynamodb_table:
+        description: "Dynamodb Table name "
+        required: false
+        type: string
+        default: "eks-terraform"
+
+
+
+permissions:
+  id-token: write
+  contents: read
+  actions: read
+
+jobs:
+  unlock:
+    name: unlock-check
+    runs-on: ubuntu-24.04-arm
+    environment: "${{ github.ref_name == 'main' && 'production' || 'development' }}"
+    steps:
+      - name: Checkout repository
+        id: clone-repo
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials via OIDC
+        id: aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.aws_iam_role }}
+          role-session-name: GitHub-Role-${{ github.run_id }}
+          aws-region: ${{ vars.aws_region }}
+      - name: LockId release
+        working-directory: terraform
+        run: |
+          LOCK_ID="${{ inputs.bucket_name }}/env:/${{ inputs.workspace }}/${{ inputs.prefix_key }}"
+          echo "Lock id: $LOCK_ID"
+          aws dynamodb delete-item --table-name ${{ inputs.dynamodb_table }} --key "{\"LockID\": {\"S\": \"$LOCK_ID\"}}" --return-values ALL_OLD
