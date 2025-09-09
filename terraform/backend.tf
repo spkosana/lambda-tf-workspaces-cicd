@@ -1,4 +1,5 @@
 terraform {
+  required_version = "~> 1.1"
 
   # Comment this out when initialising resources.
   backend "s3" {
@@ -12,6 +13,12 @@ terraform {
     aws = {
       source  = "hashicorp/aws"
       version = "6.11.0"
+    }
+  }
+    required_providers {
+    external = {
+      source  = "hashicorp/external"
+      version = ">= 2.0.0"
     }
   }
 }
@@ -34,7 +41,7 @@ provider "aws" {
   region = var.region
   default_tags {
     tags = {
-      Environment = "${terraform.workspace}"
+      Environment = terraform.workspace
       Project     = "LAMBDA-TF-WORKSPACES-CICD"
       Owner       = "Surya Kosana"
       Repository  = local.repo_name
