@@ -1,0 +1,12 @@
+name: linters-check
+on:
+  workflow_dispatch:
+#   pull_request:
+#     types: [closed]
+#     branches: [develop]
+
+jobs:
+  tflint:
+    name: tflint-check-call
+    # Reuse the compile workflow (can even point to another repo, see the docs)
+    uses: ./.github/workflows/tflint-check.yaml
