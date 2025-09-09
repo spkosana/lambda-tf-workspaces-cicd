@@ -1,0 +1,28 @@
+name: tflint-check
+
+on:
+#   pull_request:
+#     branches:
+#       - main
+#       - develop
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: tflint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./terraform
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v1
+        with:
+          tflint_version: latest
+      - name: Run TFLint
+        run: tflint --recursive
