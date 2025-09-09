@@ -1,9 +1,10 @@
 name: linters-check
 on:
   workflow_dispatch:
-#   pull_request:
-#     types: [closed]
-#     branches: [develop]
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   tflint:
