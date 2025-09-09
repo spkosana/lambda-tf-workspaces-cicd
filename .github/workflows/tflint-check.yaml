@@ -6,7 +6,7 @@ on:
 
 jobs:
   tflint:
-    name: tflint
+    name: tflint-check-job
     runs-on: ubuntu-latest
     defaults:
       run:
