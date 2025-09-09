@@ -1,6 +1,6 @@
 // Create IAM role for AWS Lambda
 resource "aws_iam_role" "iam_for_lambda" {
-  name = "${terraform.workspace}-${app_name}-role"
+  name = "${terraform.workspace}-${var.app_name}-role"
   tags = {
     Name = "Users generator Lambda Role"
   }
@@ -23,7 +23,7 @@ EOF
 }
 
 resource "aws_iam_policy" "lambda_access_policy" {
-  name        = "${terraform.workspace}-${app_name}-access-policy"
+  name        = "${terraform.workspace}-${var.app_name}-access-policy"
   description = "Policy for Lambda function to access S3 and CloudWatch Logs"
 
   policy = jsonencode({
@@ -55,7 +55,7 @@ resource "aws_iam_policy" "lambda_access_policy" {
 
 #iam_policy_attachment
 resource "aws_iam_policy_attachment" "policy_attachment" {
-  name       = "${terraform.workspace}-${app_name}-access-role-policy"
+  name       = "${terraform.workspace}-${var.app_name}-access-role-policy"
   roles      = [aws_iam_role.iam_for_lambda.name]
   policy_arn = aws_iam_policy.lambda_access_policy.arn
 }
