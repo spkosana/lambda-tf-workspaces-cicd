@@ -197,6 +197,17 @@ Before running Terraform, update these values:
         - constructs LockID with given input and variables 
         - deletes the dynamodb entry to release lock scenarios
 
+# Important step is changes in the project settings.
+1. Click on settings in the project
+2. Click on Rulesets
+3. Click on newruleset
+4. Select import a ruleset - You will find the ruleset for prod and dev in folder rules
+    - prod.json
+    - dev.json
+5. Import above files and you are all set. 
+6. This will create two mandatory steps that should be completed before merge request can me push to develop or main 
+7. You can go bananas on the rules , i would leave up to project owners for that 
+
 
 
 4. **Run initial workflow**:
