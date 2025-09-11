@@ -205,8 +205,9 @@ Before running Terraform, update these values:
     - prod.json
     - dev.json
 5. Import above files and you are all set. 
-6. This will create two mandatory steps that should be completed before merge request can me push to develop or main 
-7. You can go bananas on the rules , i would leave up to project owners for that 
+6. This will create two mandatory steps that should be completed , then only you can merge as shown below 
+![alt text](images/mandatory-checks-on-PRs.png)
+7. You can go bananas on the rules , i would leave up to project owners for that. 
 
 
 
