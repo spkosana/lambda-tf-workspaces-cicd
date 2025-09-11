@@ -1,0 +1,48 @@
+{
+  "id": 7959013,
+  "name": "dev",
+  "target": "branch",
+  "source_type": "Repository",
+  "source": "spkosana/lambda-tf-workspaces-cicd",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "exclude": [],
+      "include": [
+        "refs/heads/develop"
+      ]
+    }
+  },
+  "rules": [
+    {
+      "type": "deletion"
+    },
+    {
+      "type": "non_fast_forward"
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": false,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [
+          {
+            "context": "tflint-check-call / tflint-check-job",
+            "integration_id": 15368
+          },
+          {
+            "context": "pytest-pylint-call / pytest-check (3.11)",
+            "integration_id": 15368
+          }
+        ]
+      }
+    }
+  ],
+  "bypass_actors": [
+    {
+      "actor_id": 5,
+      "actor_type": "RepositoryRole",
+      "bypass_mode": "always"
+    }
+  ]
+}

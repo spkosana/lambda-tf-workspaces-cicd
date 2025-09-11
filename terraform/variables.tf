@@ -7,18 +7,19 @@ variable "region" {
 variable "app_name" {
   description = "generate users lambda"
   type        = string
+  default     = "generate-users"
 
 }
 
 variable "timeout" {
 
-  description = "AWS Region"
-  default     = "us-east-2"
-  type        = string
+  description = "timeout for lambda function in seconds"
+  default     = 300
+  type        = number
 }
 
 variable "memory_size" {
-  description = "AWS Region"
-  default     = "us-east-2"
-  type        = string
+  description = "momory size for lambda function in MB"
+  default     = 512
+  type        = number
 }
