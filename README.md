@@ -1,6 +1,6 @@
 # CICD Pipelines levaraging terraform workspaces for handling SDLC  
-Aim: To demonstrate how we can use terraform workspaces to handle the aws resources in project in various stages of development, Also added Lambda code deploying using docker. 
-Main focus is to demonstate the CICD pipelines
+### Aim: To demonstrate how we can use terraform workspaces to handle the aws resources in project in various stages of development, Also added Lambda code deploying using docker. 
+### Main focus is to demonstate the CICD pipelines
 
 # Project segments
 - OIDC connect For AWS role
@@ -15,6 +15,9 @@ Main focus is to demonstate the CICD pipelines
     - Added docker compose file which will spin docker container. 
     - Curl command to send payload to docker container to run and test the code
   - Added pytest use case with aws moto library and mock aws services ( for example s3 bucket in this case )
+
+# CICD Github Actions pipeline image
+* <img src="images/cicd_tf_backend.png" width="700">
 
 # OpenID Connect
 - [openid-connect Docs](https://docs.github.com/en/actions/concepts/security/openid-connect)
@@ -32,7 +35,7 @@ Main focus is to demonstate the CICD pipelines
 - Create a IAM role
   - Add permissions
     - Attach existing policies directly
-    - Select AdministratorAccess (for demo purpose only, for production create custom policy)
+    - Select AdministratorAccess - <span style="color: red;">BAD BAD BAD DONT DO IT.</span>  (for demo purpose only, for production create custom policy)
   - Click on Trust Relationships
     - Click on Edit trust relationship
       - Add your prinicpal which created in above opendi connect steps
@@ -204,8 +207,8 @@ Before running Terraform, update these values:
     - `true`: Init, plan, and apply resources
 
 ## Workspace Mapping
-Below is how the workspaces will be created from github actions workflow workspace-tf-plan and creates a LockID (shown below ) with files name attached with -md5 in the dynamodb table
-| Branch Pattern | Workspace | S3 State Location  | LockID |  
+Below is how the workspaces will be created from github actions workflow workspace-tf-plan and creates a LockID (shown below ) with files name attached with -md5 in the dynamodb table if everything is successfull , if not , the entry will not have md5 and there will be a lock associated in dynamo. In that case no plans will run until the lock is removed. This is reason i have terraform-lock-release workflow :) 
+| Branch Pattern | Workspace | S3 State Location  | LockID In Dynamodb Table |  
 |---|---|---|---|
 | `main` | `prod` | `s3://bucket/env:/prod/...terraform.tfstate` | `s3://bucket/env:/prod/...terraform.tfstate-md5` |
 | `develop` | `dev` | `s3://bucket/env:/dev/...terraform.tfstate` | `s3://bucket/env:/dev/...terraform.tfstate-md5` |
@@ -253,9 +256,104 @@ Below is how the workspaces will be created from github actions workflow workspa
 5. Create a pull request from hotfix/0000-prakash to main branch
 6. Once the PR is approved and merged , Go to the GitHub Actions tab , you will see hotfix-branch-destory worflow starts running and completes the cleanup of aws resources , branch and also sync main branch to develop after hotfix is deployed successfully.
 
+# AWS Architecture image
+* <img src="images/aws_architecture.png" width="700">
 
 # AWS Resources used
-1. IAM Role - Role for lambda
-2. Iam Policy - policy which 
-3. Lambda
-4. ECR
+1. ECR - stores docker image 
+2. IAM Role - Role for lambda
+3. Iam Policy - policy  
+4. Lambda - Uses docker image 
+
+# Terraform files
+1. variables.tf
+    - prod.tfvars, dev.tfvars, feature.tfvars used when running terraform plan and apply will have values for all the paramters mentioned below
+      - region - aws region
+      - app_name - application name
+      - timeout - lambda timeout
+      - memory_size - lambda memory size
+2. backend.tf
+    - terraform block
+      - backend
+        - region - your region
+        - bucket - bucket to store state file 
+        - key - Key path where it should be stored in the bucket 
+        - dynamodb_table - dynamodb table for keeping lockid 
+      - required Providers
+        - aws - for aws resources
+        - external - external block runs to get the github repo name 
+        - null - for null resource which builds docker images 
+    - data external block
+        - to get the repo name to add it as part of the default tags
+    - provide
+       - region
+       - default tags
+3. ecr.tf
+      - locals - calculated sha for all the files and uses in the null resource to check if needs to build the image
+      - data - get caller identity to pass to login in ecr
+      - aws_ecr_repository ( resource ) - creates ECR repo 
+      - null_resource , logs in ecr and builds docker image and pushes to ECR repo 
+4. iam.tf
+     - aws_iam_role ( resource ) - creates IAM role 
+     - aws_iam_policy ( resource ) - creates IAM policy for lambda to access resources in this case S3 to put file from lambda code and logs to cloudwatch 
+     - aws_iam_policy_attachment ( reosurce ) - Attches role and policy 
+5. lambda.tf
+     - aws_lambda_function ( resource ) - creates lambda
+     - depends on below resources to complete , I like to keep dependency just to be safe
+       - iam role 
+       - ecr repo 
+       - image build
+
+# Testing Lambda with python on AWS
+1. Below is the code that you can use to invoke the lambda which is creted on aws. you have to use your values :)
+   - python code 
+   ```python
+    import boto3
+    import json
+    from pprint import pprint
+
+    session = boto3.session.Session(profile_name="terraform")
+    lambda_client = session.client("lambda", region_name="us-east-2")
+    function_name = "dev-generate-users"
+    payload_data = {"number": 20, "bucket_name": "capstone-kspr"}
+    payload_json = json.dumps(payload_data)
+    response = lambda_client.invoke(
+        FunctionName=function_name,
+        InvocationType="RequestResponse",
+        Payload=payload_json,
+    )
+    payload = response.get("Payload").read().decode("utf-8")
+    pprint(payload)
+    ```
+
+# Testing lambda code in local, Below steps will help you 
+Pre-requisite - Docker must be installed and up and running. 
+- [docker install](https://docs.docker.com/desktop/setup/install/mac-install/)
+- make must be installed - brew install make , windows , there are multiple ways :) 
+1. Run docker compose file, can be done in two ways
+   - Right click on the file and click on compose up to build the environment and click on compose down for tearing down 
+   - run make commands - make must be installed.
+     - make ps - list all the docker compose services that are up and running
+     - make up - builds docker environment
+     - make down - tears down docker environment
+     - make restart - will tear down the docker environment and build it up - for any reason if you want to restart
+     - make build - build the docker image
+       - make build - creates an image with tag as latest ( default )
+       - make build VERSION=1 - creats with tag that you give as value - in this case tag will be 1
+     - make cov - checks coverage of your python tests , fails if your pytest coverage is not 100% :) 
+     - make tests - run pytest for python project
+     - make pylint - check the lint for your python code
+2. To test lambda code which is in container , below steps will help you. 
+    - shell code 
+    ```shell
+    curl "http://localhost:3000/2015-03-31/functions/function/invocations" -d '{"number":20, "bucket_name":"capstone-kspr"}'
+    ```
+    - Make changes your code
+      - make restart - This helps to update the code before you test. - This is necessary after code change. 
+      - Run above curl command to see the result
+      - to check the logs if you have docker desktop you can see the logs in the container
+
+
+Additional python scripts are in images folder. Those are used to generate architecture diagram
+1. cicd_tf_backend.py - This generates the image and show how the github actions work with terraform
+2. aws-image.py - This generates the image how lambda interacts in aws code

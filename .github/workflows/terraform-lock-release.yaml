@@ -34,4 +34,4 @@ jobs:
         run: |
           LOCK_ID="${{ vars.backend_bucket }}/env:/${{ inputs.workspace }}/${{ vars.backend_bucket_key }}"
           echo "Lock id: $LOCK_ID"
-          # aws dynamodb delete-item --table-name ${{ vars.dynamodb_table }} --key "{\"LockID\": {\"S\": \"$LOCK_ID\"}}" --return-values ALL_OLD
+          aws dynamodb delete-item --table-name ${{ vars.dynamodb_table }} --key "{\"LockID\": {\"S\": \"$LOCK_ID\"}}" --return-values ALL_OLD
