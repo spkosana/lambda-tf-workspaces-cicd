@@ -206,7 +206,7 @@ Before running Terraform, update these values:
     - dev.json
 5. Import above files and you are all set. 
 6. This will create two mandatory steps that should be completed , then only you can merge as shown below 
-7. Before mandatory checks passed shown as below screenshot
+7. Before mandatory checks passed shown as below screenshot - Do not worry about the merge without message , because owner will only have that which i have added in the settings , you can remove that if you wish 
    - ![alt text](images/before-mandatory-checks-pass-on-PRs.png)
 8. After mandatory checks passed shown as below screenshot
    - ![alt text](images/after-mandatory-checks-pass-on-PRs.png)
